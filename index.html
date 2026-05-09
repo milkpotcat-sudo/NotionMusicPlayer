@@ -26,7 +26,11 @@ body{
 
   height:100vh;
 
-  font-family:serif;
+  overflow:hidden;
+
+  font-family:
+    "Noto Sans JP",
+    sans-serif;
 }
 
 
@@ -37,7 +41,7 @@ body{
 .player{
 
   width:320px;
-  height:120px;
+  height:112px;
 
   background:#FAF5F4;
 
@@ -46,11 +50,15 @@ body{
   display:flex;
   align-items:center;
 
-  gap:18px;
+  gap:16px;
 
-  padding:18px;
+  padding:16px;
 
   box-sizing:border-box;
+
+  position:relative;
+
+  overflow:hidden;
 
   box-shadow:
     0 3px 10px rgba(0,0,0,.05);
@@ -58,34 +66,94 @@ body{
 
 
 /* ======================
-   RECORD
+   WOOD TEXTURE
+====================== */
+
+.player::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  opacity:.05;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,.5),
+      rgba(255,255,255,.5) 2px,
+      transparent 2px,
+      transparent 7px
+    );
+
+  pointer-events:none;
+}
+
+
+/* ======================
+   NOISE
+====================== */
+
+.player::after{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  opacity:.035;
+
+  background-image:
+    radial-gradient(
+      #000 0.5px,
+      transparent 0.5px
+    );
+
+  background-size:
+    4px 4px;
+
+  pointer-events:none;
+}
+
+
+/* ======================
+   RECORD AREA
 ====================== */
 
 .record-area{
 
   position:relative;
 
-  width:95px;
-  height:95px;
+  width:84px;
+  height:84px;
 
   display:flex;
   justify-content:center;
   align-items:center;
+
+  flex-shrink:0;
 }
 
 
+/* ======================
+   RECORD
+====================== */
+
 .record{
 
-  width:82px;
-  height:82px;
+  width:72px;
+  height:72px;
 
   border-radius:50%;
 
   background:
     radial-gradient(circle,
-    #d8b9a8 0 10px,
-    #252525 10px 14px,
-    #303030 14px 100%);
+    #d8b9a8 0 9px,
+    #252525 9px 13px,
+    #303030 13px 100%);
 
   position:relative;
 
@@ -94,63 +162,48 @@ body{
 }
 
 
+/* RECORD GROOVES */
+
 .record::before{
 
   content:"";
 
   position:absolute;
 
-  inset:12px;
+  inset:10px;
 
   border-radius:50%;
 
   border:
-    1px solid rgba(255,255,255,.05);
-}
-
-
-.record::after{
-
-  content:"";
-
-  position:absolute;
-
-  inset:22px;
-
-  border-radius:50%;
-
-  border:
-    1px solid rgba(255,255,255,.04);
+    1px solid rgba(255,255,255,.08);
 }
 
 
 /* ======================
-   ARM
+   RECORD ARM
 ====================== */
 
 .arm{
 
   position:absolute;
 
-  width:62px;
-  height:6px;
+  width:54px;
+  height:5px;
 
-  background:
-    linear-gradient(
-      to right,
-      #ececec,
-      #d5d5d5
-    );
+  background:#b39b8d;
 
   border-radius:999px;
 
-  top:24px;
+  top:10px;
   right:-2px;
 
   transform:
-    rotate(30deg);
+    rotate(28deg);
 
   transform-origin:left center;
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,.12);
 }
 
 
@@ -160,15 +213,15 @@ body{
 
   position:absolute;
 
-  left:-8px;
-  top:-5px;
-
-  width:16px;
-  height:16px;
+  width:12px;
+  height:12px;
 
   border-radius:50%;
 
-  background:#cfb29f;
+  background:#cab3a5;
+
+  left:-6px;
+  top:-3.5px;
 }
 
 
@@ -178,89 +231,15 @@ body{
 
   position:absolute;
 
-  right:-6px;
-  top:-2px;
+  width:8px;
+  height:8px;
 
-  width:12px;
-  height:12px;
+  background:#e8d6cb;
 
-  background:#666;
+  right:-2px;
+  top:-1.5px;
 
-  border-radius:3px;
-}
-
-
-/* ======================
-   INFO
-====================== */
-
-.info{
-
-  flex:1;
-}
-
-
-.title{
-
-  font-size:15px;
-
-  color:#725f55;
-
-  margin-bottom:12px;
-
-  line-height:1.4;
-}
-
-
-/* ======================
-   CONTROLS
-====================== */
-
-.controls{
-
-  display:flex;
-  align-items:center;
-
-  gap:8px;
-}
-
-
-button{
-
-  width:32px;
-  height:32px;
-
-  border:none;
-  border-radius:50%;
-
-  background:#dcb9a6;
-
-  color:white;
-
-  cursor:pointer;
-
-  font-size:12px;
-
-  transition:.2s;
-}
-
-
-button:hover{
-
-  opacity:.9;
-
-  transform:
-    translateY(-1px);
-}
-
-
-input[type="range"]{
-
-  width:70px;
-
-  accent-color:#dcb9a6;
-
-  cursor:pointer;
+  border-radius:2px;
 }
 
 
@@ -287,11 +266,109 @@ input[type="range"]{
 
 }
 
+
+/* ======================
+   CONTENT
+====================== */
+
+.content{
+
+  flex:1;
+
+  min-width:0;
+}
+
+
+/* ======================
+   TITLE
+====================== */
+
+.title{
+
+  font-size:14px;
+
+  color:#725f55;
+
+  margin-bottom:10px;
+
+  line-height:1.4;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+
+/* ======================
+   CONTROLS
+====================== */
+
+.controls{
+
+  display:flex;
+  align-items:center;
+
+  gap:8px;
+}
+
+
+/* ======================
+   BUTTON
+====================== */
+
+button{
+
+  width:30px;
+  height:30px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#dcb9a6;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:11px;
+
+  transition:.2s;
+
+  flex-shrink:0;
+}
+
+
+button:hover{
+
+  transform:
+    translateY(-1px);
+
+  opacity:.92;
+}
+
+
+/* ======================
+   VOLUME
+====================== */
+
+input[type="range"]{
+
+  width:64px;
+
+  accent-color:#dcb9a6;
+
+  cursor:pointer;
+}
+
 </style>
 
 </head>
 
 <body>
+
 
 
 <div class="player">
@@ -310,15 +387,14 @@ input[type="range"]{
 
 
 
-  <div class="info">
+  <div class="content">
+
 
     <div
       class="title"
       id="title"
     >
-
-      読み込み中...
-
+      loading...
     </div>
 
 
@@ -341,14 +417,15 @@ input[type="range"]{
         type="range"
         id="volume"
         min="0"
-        max="1"
-        step="0.01"
-        value="0.35"
-      >
+        max="100"
+        value="35"
+      />
 
     </div>
 
+
   </div>
+
 
 </div>
 
@@ -370,45 +447,45 @@ input[type="range"]{
 const playlist = [
 
 {
-title:"Sleep Aid｜月光浴",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip1.m4a",
-start:0,
-end:3
+  start:0,
+  end:3,
+  title:'Sleep Aid￤月光浴',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip1.m4a'
 },
 
 {
-title:"Spring Morning｜ベーカリーカフェ",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip2.m4a",
-start:4,
-end:7
+  start:4,
+  end:7,
+  title:'Spring Morning￤ベーカリーカフェ',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip2.m4a'
 },
 
 {
-title:"Lofty Library｜森の図書館",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip3.m4a",
-start:8,
-end:11
+  start:8,
+  end:11,
+  title:'Lofty Library￤森の図書館',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip3.m4a'
 },
 
 {
-title:"Cill Cabin｜水族館",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip4.m4a",
-start:12,
-end:15
+  start:12,
+  end:15,
+  title:'Chill Cabin￤水族館',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip4.m4a'
 },
 
 {
-title:"Night Cafe｜レトロカフェ",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip5.m4a",
-start:16,
-end:19
+  start:16,
+  end:19,
+  title:'Night Cafe￤レトロカフェ',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip5.m4a'
 },
 
 {
-title:"The Roost｜喫茶ハトの巣",
-url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip6.m4a",
-start:20,
-end:23
+  start:20,
+  end:23,
+  title:'The Roost￤喫茶ハトの巣',
+  src:'https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip6.m4a'
 }
 
 ];
@@ -424,9 +501,6 @@ const audio =
 const title =
   document.getElementById('title');
 
-const record =
-  document.getElementById('record');
-
 const playBtn =
   document.getElementById('playBtn');
 
@@ -439,26 +513,23 @@ const randomBtn =
 const volume =
   document.getElementById('volume');
 
-
-/* ======================
-   CURRENT TRACK
-====================== */
-
-let currentTrack = null;
+const record =
+  document.getElementById('record');
 
 
 /* ======================
-   GET TRACK BY TIME
+   TRACK SELECT
 ====================== */
 
-function getTrackByTime(){
+function getCurrentTrack(){
 
   const hour =
     new Date().getHours();
 
-  return playlist.find(track=>
-    hour >= track.start &&
-    hour <= track.end
+  return playlist.find(
+    track =>
+      hour >= track.start &&
+      hour <= track.end
   );
 
 }
@@ -468,94 +539,21 @@ function getTrackByTime(){
    LOAD TRACK
 ====================== */
 
+let currentTrack =
+  getCurrentTrack();
+
 function loadTrack(track){
 
-  if(currentTrack === track.url)
-    return;
+  currentTrack = track;
 
-  fadeOut(()=>{
+  audio.src = track.src;
 
-    currentTrack = track.url;
-
-    audio.src = track.url;
-
-    title.textContent =
-      track.title;
-
-    audio.play();
-
-    fadeIn();
-
-  });
+  title.textContent =
+    track.title;
 
 }
 
-
-/* ======================
-   FADE IN
-====================== */
-
-function fadeIn(){
-
-  audio.volume = 0;
-
-  let vol = 0;
-
-  const fade =
-    setInterval(()=>{
-
-      vol += 0.02;
-
-      if(vol >= volume.value){
-
-        vol = volume.value;
-
-        clearInterval(fade);
-      }
-
-      audio.volume = vol;
-
-    },80);
-
-}
-
-
-/* ======================
-   FADE OUT
-====================== */
-
-function fadeOut(callback){
-
-  let vol = audio.volume;
-
-  const fade =
-    setInterval(()=>{
-
-      vol -= 0.02;
-
-      if(vol <= 0){
-
-        vol = 0;
-
-        clearInterval(fade);
-
-        callback();
-      }
-
-      audio.volume = vol;
-
-    },60);
-
-}
-
-
-/* ======================
-   INITIAL LOAD
-====================== */
-
-loadTrack(
-  getTrackByTime()
-);
+loadTrack(currentTrack);
 
 
 /* ======================
@@ -564,14 +562,23 @@ loadTrack(
 
 playBtn.addEventListener(
   'click',
-  ()=>{
+  async()=>{
 
-    audio.play();
+    try{
 
-    record.classList.add('spin');
+      await audio.play();
 
-  }
-);
+      record.classList.add(
+        'spin'
+      );
+
+    }catch(err){
+
+      console.log(err);
+
+    }
+
+});
 
 
 /* ======================
@@ -584,10 +591,11 @@ pauseBtn.addEventListener(
 
     audio.pause();
 
-    record.classList.remove('spin');
+    record.classList.remove(
+      'spin'
+    );
 
-  }
-);
+});
 
 
 /* ======================
@@ -608,36 +616,57 @@ randomBtn.addEventListener(
 
     loadTrack(random);
 
-    record.classList.add('spin');
+    audio.play();
 
-  }
-);
+    record.classList.add(
+      'spin'
+    );
+
+});
 
 
 /* ======================
    VOLUME
 ====================== */
 
+audio.volume = 0.35;
+
 volume.addEventListener(
   'input',
-  ()=>{
+  e=>{
 
     audio.volume =
-      volume.value;
+      e.target.value / 100;
 
-  }
-);
+});
 
 
 /* ======================
-   TIME CHECK
+   AUTO TRACK CHANGE
 ====================== */
 
 setInterval(()=>{
 
-  loadTrack(
-    getTrackByTime()
-  );
+  const newTrack =
+    getCurrentTrack();
+
+  if(
+    newTrack.title !==
+    currentTrack.title
+  ){
+
+    const wasPlaying =
+      !audio.paused;
+
+    loadTrack(newTrack);
+
+    if(wasPlaying){
+
+      audio.play();
+
+    }
+
+  }
 
 },60000);
 
