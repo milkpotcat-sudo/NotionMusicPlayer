@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/>
+
+<title>Notion Music Player</title>
+
+<style>
+
+body{
+
+  margin:0;
+
+  background:white;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  height:100vh;
+
+  font-family:serif;
+}
+
+
+/* ======================
+   PLAYER
+====================== */
+
+.player{
+
+  width:320px;
+  height:120px;
+
+  background:#FAF5F4;
+
+  border-radius:28px;
+
+  display:flex;
+  align-items:center;
+
+  gap:18px;
+
+  padding:18px;
+
+  box-sizing:border-box;
+
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.05);
+}
+
+
+/* ======================
+   RECORD
+====================== */
+
+.record-area{
+
+  position:relative;
+
+  width:95px;
+  height:95px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+
+.record{
+
+  width:82px;
+  height:82px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(circle,
+    #d8b9a8 0 10px,
+    #252525 10px 14px,
+    #303030 14px 100%);
+
+  position:relative;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.14);
+}
+
+
+.record::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:12px;
+
+  border-radius:50%;
+
+  border:
+    1px solid rgba(255,255,255,.05);
+}
+
+
+.record::after{
+
+  content:"";
+
+  position:absolute;
+
+  inset:22px;
+
+  border-radius:50%;
+
+  border:
+    1px solid rgba(255,255,255,.04);
+}
+
+
+/* ======================
+   ARM
+====================== */
+
+.arm{
+
+  position:absolute;
+
+  width:62px;
+  height:6px;
+
+  background:
+    linear-gradient(
+      to right,
+      #ececec,
+      #d5d5d5
+    );
+
+  border-radius:999px;
+
+  top:24px;
+  right:-2px;
+
+  transform:
+    rotate(30deg);
+
+  transform-origin:left center;
+}
+
+
+.arm::before{
+
+  content:"";
+
+  position:absolute;
+
+  left:-8px;
+  top:-5px;
+
+  width:16px;
+  height:16px;
+
+  border-radius:50%;
+
+  background:#cfb29f;
+}
+
+
+.arm::after{
+
+  content:"";
+
+  position:absolute;
+
+  right:-6px;
+  top:-2px;
+
+  width:12px;
+  height:12px;
+
+  background:#666;
+
+  border-radius:3px;
+}
+
+
+/* ======================
+   INFO
+====================== */
+
+.info{
+
+  flex:1;
+}
+
+
+.title{
+
+  font-size:15px;
+
+  color:#725f55;
+
+  margin-bottom:12px;
+
+  line-height:1.4;
+}
+
+
+/* ======================
+   CONTROLS
+====================== */
+
+.controls{
+
+  display:flex;
+  align-items:center;
+
+  gap:8px;
+}
+
+
+button{
+
+  width:32px;
+  height:32px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#dcb9a6;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:12px;
+
+  transition:.2s;
+}
+
+
+button:hover{
+
+  opacity:.9;
+
+  transform:
+    translateY(-1px);
+}
+
+
+input[type="range"]{
+
+  width:70px;
+
+  accent-color:#dcb9a6;
+
+  cursor:pointer;
+}
+
+
+/* ======================
+   SPIN
+====================== */
+
+.spin{
+
+  animation:
+    spin 4s linear infinite;
+}
+
+
+@keyframes spin{
+
+  from{
+    transform:rotate(0deg);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="player">
+
+
+  <div class="record-area">
+
+    <div
+      class="record"
+      id="record"
+    ></div>
+
+    <div class="arm"></div>
+
+  </div>
+
+
+
+  <div class="info">
+
+    <div
+      class="title"
+      id="title"
+    >
+
+      読み込み中...
+
+    </div>
+
+
+
+    <div class="controls">
+
+      <button id="playBtn">
+        ▶
+      </button>
+
+      <button id="pauseBtn">
+        ❚❚
+      </button>
+
+      <button id="randomBtn">
+        ⤮
+      </button>
+
+      <input
+        type="range"
+        id="volume"
+        min="0"
+        max="1"
+        step="0.01"
+        value="0.35"
+      >
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<audio
+  id="audio"
+  loop
+></audio>
+
+
+
+<script>
+
+/* ======================
+   PLAYLIST
+====================== */
+
+const playlist = [
+
+{
+title:"Sleep Aid｜月光浴",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip1.m4a",
+start:0,
+end:3
+},
+
+{
+title:"Spring Morning｜ベーカリーカフェ",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip2.m4a",
+start:4,
+end:7
+},
+
+{
+title:"Lofty Library｜森の図書館",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip3.m4a",
+start:8,
+end:11
+},
+
+{
+title:"Cill Cabin｜水族館",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip4.m4a",
+start:12,
+end:15
+},
+
+{
+title:"Night Cafe｜レトロカフェ",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip5.m4a",
+start:16,
+end:19
+},
+
+{
+title:"The Roost｜喫茶ハトの巣",
+url:"https://milkpotcat-sudo.github.io/NotionMusicPlayer/Clip6.m4a",
+start:20,
+end:23
+}
+
+];
+
+
+/* ======================
+   ELEMENTS
+====================== */
+
+const audio =
+  document.getElementById('audio');
+
+const title =
+  document.getElementById('title');
+
+const record =
+  document.getElementById('record');
+
+const playBtn =
+  document.getElementById('playBtn');
+
+const pauseBtn =
+  document.getElementById('pauseBtn');
+
+const randomBtn =
+  document.getElementById('randomBtn');
+
+const volume =
+  document.getElementById('volume');
+
+
+/* ======================
+   CURRENT TRACK
+====================== */
+
+let currentTrack = null;
+
+
+/* ======================
+   GET TRACK BY TIME
+====================== */
+
+function getTrackByTime(){
+
+  const hour =
+    new Date().getHours();
+
+  return playlist.find(track=>
+    hour >= track.start &&
+    hour <= track.end
+  );
+
+}
+
+
+/* ======================
+   LOAD TRACK
+====================== */
+
+function loadTrack(track){
+
+  if(currentTrack === track.url)
+    return;
+
+  fadeOut(()=>{
+
+    currentTrack = track.url;
+
+    audio.src = track.url;
+
+    title.textContent =
+      track.title;
+
+    audio.play();
+
+    fadeIn();
+
+  });
+
+}
+
+
+/* ======================
+   FADE IN
+====================== */
+
+function fadeIn(){
+
+  audio.volume = 0;
+
+  let vol = 0;
+
+  const fade =
+    setInterval(()=>{
+
+      vol += 0.02;
+
+      if(vol >= volume.value){
+
+        vol = volume.value;
+
+        clearInterval(fade);
+      }
+
+      audio.volume = vol;
+
+    },80);
+
+}
+
+
+/* ======================
+   FADE OUT
+====================== */
+
+function fadeOut(callback){
+
+  let vol = audio.volume;
+
+  const fade =
+    setInterval(()=>{
+
+      vol -= 0.02;
+
+      if(vol <= 0){
+
+        vol = 0;
+
+        clearInterval(fade);
+
+        callback();
+      }
+
+      audio.volume = vol;
+
+    },60);
+
+}
+
+
+/* ======================
+   INITIAL LOAD
+====================== */
+
+loadTrack(
+  getTrackByTime()
+);
+
+
+/* ======================
+   PLAY
+====================== */
+
+playBtn.addEventListener(
+  'click',
+  ()=>{
+
+    audio.play();
+
+    record.classList.add('spin');
+
+  }
+);
+
+
+/* ======================
+   PAUSE
+====================== */
+
+pauseBtn.addEventListener(
+  'click',
+  ()=>{
+
+    audio.pause();
+
+    record.classList.remove('spin');
+
+  }
+);
+
+
+/* ======================
+   RANDOM
+====================== */
+
+randomBtn.addEventListener(
+  'click',
+  ()=>{
+
+    const random =
+      playlist[
+        Math.floor(
+          Math.random() *
+          playlist.length
+        )
+      ];
+
+    loadTrack(random);
+
+    record.classList.add('spin');
+
+  }
+);
+
+
+/* ======================
+   VOLUME
+====================== */
+
+volume.addEventListener(
+  'input',
+  ()=>{
+
+    audio.volume =
+      volume.value;
+
+  }
+);
+
+
+/* ======================
+   TIME CHECK
+====================== */
+
+setInterval(()=>{
+
+  loadTrack(
+    getTrackByTime()
+  );
+
+},60000);
+
+</script>
+
+</body>
+
+</html>
